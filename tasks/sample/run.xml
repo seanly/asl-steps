@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="sample" default="main">
+
+  <dirname property="task.basedir" file="${ant.file.sample}" />
+  <basename property="task.name" file="${task.basedir}" />
+  <property file="${task.basedir}/default.properties" />
+  <property name="task.tool.dir" location="${task.basedir}/tool" />
+
+  <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
+
+  <target name="init">
+    <mkdir dir="${task.reports.dir}" />
+  </target>
+
+  <target name="main" depends="init">
+
+    <echo message="${arg1}" />
+
+  </target>
+</project>
