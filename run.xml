@@ -12,8 +12,6 @@
   <property name="asl.tasks.root" location="${asl.root}/tasks" />
   <property name="ant.root" location="${asl.root}/tools/ant" />
   <property name="antlibs.root" location="${asl.root}/tools/antlibs" />
-  <property name="antlibs.saxon9.root" location="${antlibs.root}/saxon9" />
-  <property name="antlibs.saxon8.jar" location="${antlibs.root}/saxon8.jar" />
 
   <property name="ws.dir" location="${env.WORKSPACE}" />
 
