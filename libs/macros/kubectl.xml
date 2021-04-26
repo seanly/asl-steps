@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="asl-macros-kubectl">
+  <description>
+    kubectl相关宏
+  </description>
+
+  <macrodef name="kubectl">
+    <attribute name="command" />
+    <attribute name="options" />
+    <attribute name="namespace" />
+    <sequential>
+      <echo message="kubect @{command} @{options} -n @{namespace}" />
+      <exec executable="kubectl" failonerror="true">
+        <arg value="@{command}" />
+        <arg line="@{options}" />
+        <arg line="-n @{namespace}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="kubectlSetImage">
+    <attribute name="resource" />
+    <attribute name="container" />
+    <attribute name="image" />
+    <attribute name="namespace" />
+    <sequential>
+      <kubectl command="set" namespace="@{namespace}"
+        options="image @{resource} @{container}=@{image}" />
+    </sequential>
+  </macrodef>
+
+</project>
