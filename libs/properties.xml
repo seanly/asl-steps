@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="asl-properties">
+    <description>
+      这个文件提供基本的属性信息（定义常量）
+      所有其他属性依赖这些属性
+    </description>
+
+    <property environment="env" />
+
+      <!-- 确定操作系统变量 -->
+    <condition property="os.unix">
+        <os family="unix" />
+    </condition>
+
+    <condition property="os.windows">
+        <or>
+            <os family="winnt" />
+            <os family="win9x" />
+        </or>
+    </condition>
+
+    <dirname property="asl.libs.basedir" file="${ant.file.asl-properties}" />
+    <property name="asl.root" location="${asl.libs.basedir}/.." />
+
+    <property file="${asl.libs.basedir}/config.properties" />
+
+      <!-- jenkins相关变量 -->
+    <property name="jenkins.home" location="${env.JENKINS_HOME}" />
+    <property name="jenkins.workspace" location="${env.WORKSPACE}" />
+
+    <property name="ws.dir" location="${jenkins.workspace}" />
+
+      <!-- directory variables
+        dot dirs
+      -->
+    <property name="dot.reports.dir" value=".reports" />
+    <property name="dot.jenkins.dir" value=".jenkins" />
+    <property name="dot.ci.dir" value=".ci" />
+    <property name="dot.asl.dir" value=".asl" />
+
+    <target name="asl.properties.unix" if="os.unix">
+        <!-- unix properties -->
+    </target>
+
+    <target name="asl.properties.windows" if="os.windows">
+        <!-- windows properties -->
+    </target>
+
+    <target name="asl.properties" depends="asl.properties.unix,asl.properties.windows" />
+
+</project>

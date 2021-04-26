@@ -1,0 +1,99 @@
+<project name="asl-taskdef">
+  <description>
+    日志相关宏(macro)的定义
+  </description>
+
+  <!-- func: printLog -->
+  <macrodef name="printLog">
+    <attribute name="message" default="" />
+    <attribute name="message.zh" default="" />
+      <!-- type: info/warn/err -->
+    <attribute name="type" default="info" /> 
+    <sequential>
+
+      <var name="##message.zh##" value="@{message.zh}" />
+      <if>
+        <equals arg1="@{message.zh}" arg2="" casesensitive="false"/>
+        <then>
+          <var name="##message.zh##" value="@{message}" />
+        </then>
+      </if>
+
+      <if>
+        <not>
+          <isset property="asl.log.level" />
+        </not>
+        <then>
+          <property name="asl.log.level" value="info" />
+        </then>
+      </if>
+
+      <if>
+        <equals arg1="@{type}" arg2="debug" casesensitive="false"/>
+        <then>
+          <if>
+            <equals arg1="${asl.log.level}" arg2="debug" casesensitive="false"/>
+            <then>
+              <if>
+                <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
+                <then>
+                  <echo><![CDATA[--//调试信息: ${##message.zh##}]]></echo>
+                </then>
+                <else>
+                  <echo><![CDATA[--//DEBUG: @{message}]]></echo>
+                </else>
+              </if>
+            </then>
+          </if>
+        </then>
+        <elseif>
+          <equals arg1="@{type}" arg2="info" casesensitive="false"/>
+          <then>
+            <if>
+              <or>
+                <equals arg1="${asl.log.level}" arg2="info" casesensitive="false"/>
+                <equals arg1="${asl.log.level}" arg2="debug" casesensitive="false"/>
+              </or>
+              <then>
+                <if>
+                  <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
+                  <then>
+                    <echo><![CDATA[--//信息: ${##message.zh##}]]></echo>
+                  </then>
+                  <else>
+                    <echo><![CDATA[--//INFO: @{message}]]></echo>
+                  </else>
+                </if>
+              </then>
+            </if>
+          </then>
+        </elseif>
+        <elseif>
+          <equals arg1="@{type}" arg2="warn" casesensitive="false"/>
+          <then>
+            <if>
+              <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
+              <then>
+                <echo><![CDATA[--//警告: ${##message.zh##}]]></echo>
+              </then>
+              <else>
+                <echo><![CDATA[--//WARN: @{message}]]></echo>
+              </else>
+            </if>
+          </then>
+        </elseif>
+        <else>
+          <if>
+            <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
+            <then>
+              <fail message="--//错误: ${##message.zh##}" />
+            </then>
+            <else>
+              <fail message="--//ERR: @{message}" />
+            </else>
+          </if>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+</project>

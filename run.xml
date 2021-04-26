@@ -7,140 +7,21 @@
   <dirname property="asl.root" file="${ant.file.run}" />
   <property environment="env"/>
 
+  <property name="asl.libs.root" location="${asl.root}/libs" />
+
+    <!--
+      加载配置
+      ant         //property用于定义常量，
+      ant-contrib //var用于定义变量
+    -->
   <property file="${asl.root}/config.properties" />
 
-  <property name="asl.tasks.root" location="${asl.root}/tasks" />
-  <property name="ant.root" location="${asl.root}/tools/ant" />
-  <property name="antlibs.root" location="${asl.root}/tools/antlibs" />
+    <!--
+      加载功能
+    --> 
+  <import file="${asl.libs.root}/taskdefs.xml" />
 
-  <property name="ws.dir" location="${env.WORKSPACE}" />
-
-    <!-- directory variables
-      dot dirs
-    -->
-  <property name="dot.reports.dir" value=".reports" />
-  <property name="dot.jenkins.dir" value=".jenkins" />
-  <property name="dot.ci.dir" value=".ci" />
-  <property name="dot.asl.dir" value=".asl" />
-
-    <!-- ant-contrib taskdefs.
-    -->
-  <taskdef resource="net/sf/antcontrib/antlib.xml">
-    <classpath>
-      <fileset dir="${antlibs.root}" includes="**/*.jar" />
-    </classpath>
-  </taskdef>
-
-  <macrodef name="printLog">
-    <attribute name="message" default="" />
-    <attribute name="message.zh" default="" />
-    <attribute name="type" default="info" /> <!-- type: info/warn/err -->
-    <sequential>
-
-      <var name="##message.zh##" value="@{message.zh}" />
-      <if>
-        <equals arg1="@{message.zh}" arg2="" casesensitive="false"/>
-        <then>
-          <var name="##message.zh##" value="@{message}" />
-        </then>
-      </if>
-
-      <if>
-        <not>
-          <isset property="asl.log.level" />
-        </not>
-        <then>
-          <property name="asl.log.level" value="info" />
-        </then>
-      </if>
-
-      <if>
-        <equals arg1="@{type}" arg2="debug" casesensitive="false"/>
-        <then>
-          <if>
-            <equals arg1="${asl.log.level}" arg2="debug" casesensitive="false"/>
-            <then>
-              <if>
-                <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
-                <then>
-                  <echo><![CDATA[--//调试信息: ${##message.zh##}]]></echo>
-                </then>
-                <else>
-                  <echo><![CDATA[--//DEBUG: @{message}]]></echo>
-                </else>
-              </if>
-            </then>
-          </if>
-        </then>
-        <elseif>
-          <equals arg1="@{type}" arg2="info" casesensitive="false"/>
-          <then>
-            <if>
-              <or>
-                <equals arg1="${asl.log.level}" arg2="info" casesensitive="false"/>
-                <equals arg1="${asl.log.level}" arg2="debug" casesensitive="false"/>
-              </or>
-              <then>
-                <if>
-                  <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
-                  <then>
-                    <echo><![CDATA[--//信息: ${##message.zh##}]]></echo>
-                  </then>
-                  <else>
-                    <echo><![CDATA[--//INFO: @{message}]]></echo>
-                  </else>
-                </if>
-              </then>
-            </if>
-          </then>
-        </elseif>
-        <elseif>
-          <equals arg1="@{type}" arg2="warn" casesensitive="false"/>
-          <then>
-            <if>
-              <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
-              <then>
-                <echo><![CDATA[--//警告: ${##message.zh##}]]></echo>
-              </then>
-              <else>
-                <echo><![CDATA[--//WARN: @{message}]]></echo>
-              </else>
-            </if>
-          </then>
-        </elseif>
-        <else>
-            <if>
-              <equals arg1="${asl.log.locale}" arg2="zh" casesensitive="false"/>
-              <then>
-                <fail message="--//错误: ${##message.zh##}" />
-              </then>
-              <else>
-                <fail message="--//ERR: @{message}" />
-              </else>
-            </if>
-        </else>
-      </if>
-    </sequential>
-  </macrodef>
-
-  <macrodef name="ci">
-    <attribute name="task" />
-    <sequential>
-      <if>
-        <not>
-          <isset property="asl.tasks.root" />
-        </not>
-        <then>
-          <printLog type="err"
-            message="asl.tasks.root is not set"
-            message.zh="asl.tasks.root没有设置" 
-            />
-        </then>
-      </if>
-      <ant antfile="${asl.tasks.root}/@{task}/run.xml" inheritRefs="true" />
-    </sequential>
-  </macrodef>
-
+    <!-- 系统入口 -->
   <target name="main">
 
     <printLog 

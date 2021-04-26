@@ -1,0 +1,24 @@
+<project name="asl-taskdef">
+  <description>
+    原子任务相关宏(macro)的定义
+  </description>
+
+  <macrodef name="ci">
+    <attribute name="task" />
+    <sequential>
+      <if>
+        <not>
+          <isset property="asl.tasks.root" />
+        </not>
+        <then>
+          <printLog type="err"
+            message="asl.tasks.root is not set"
+            message.zh="asl.tasks.root没有设置" 
+            />
+        </then>
+      </if>
+      <ant antfile="${asl.tasks.root}/@{task}/run.xml" inheritRefs="true" />
+    </sequential>
+  </macrodef>
+
+</project>

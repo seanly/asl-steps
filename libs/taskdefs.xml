@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="asl-taskdefs">
+  <description>
+    这个文件提供常用的功能扩展（定义函数）
+    所有扩展功能的导入入口
+  </description>
+  <dirname property="asl.libs.root" file="${ant.file.asl-taskdefs}" />
+  <import file="${asl.libs.root}/properties.xml" />
+    <!-- start: 导入jar包扩展的功能 -->
+
+    <!-- ant-contrib taskdefs.  -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset dir="${antlibs.root}" includes="**/*.jar" />
+    </classpath>
+  </taskdef>
+
+    <!-- end: 导入jar包扩展的功能 -->
+
+    <!-- start: 导入ant 宏(macros)扩展的功能 -->
+  <import file="${asl.libs.root}/macro-log.xml" />
+  <import file="${asl.libs.root}/macro-ci.xml" />
+    <!-- end: 导入ant 宏(macros)扩展的功能 -->
+
+</project>
