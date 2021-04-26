@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="asl-macros-docker">
+  <description>
+    提供docker命令相关宏
+  </description>
+
+  <macrodef name="dockerLogin">
+    <attribute name="hubUrl" />
+    <attribute name="hubUsr" />
+    <attribute name="hubPsw" />
+    <sequential>
+      <printLog message="docker login @{hubUrl}...." />
+      <exec executable="docker" failonerror="true">
+        <arg value="login" />
+        <arg line="--username @{hubUsr}" />
+        <arg line="--password @{hubPsw}" />
+        <arg value="@{hubUrl}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerLogout">
+    <attribute name="hubUrl" />
+    <sequential>
+      <printLog message="docker logout @{hubUrl}...." />
+      <exec executable="docker" failonerror="true">
+        <arg line="logout @{hubUrl}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerBuild">
+    <attribute name="image" />
+    <attribute name="path" />
+    <attribute name="options" default="." />
+    <sequential>
+      <printLog message="docker build image:@{image} @{options} in @{path} ...." />
+      <exec executable="docker" failonerror="true">
+        <arg value="build" />
+        <arg line="-t @{image}" />
+        <arg line="@{options}" />
+        <arg value="@{path}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerTag">
+    <attribute name="srcImage" />
+    <attribute name="destImage" />
+    <sequential>
+      <printLog message="docker tag @{srcImage}->@{destImage}" />
+      <exec executable="docker" failonerror="true">
+        <arg value="tag" />
+        <arg line="@{srcImage}" />
+        <arg line="@{destImage}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerPush">
+    <attribute name="image" />
+    <sequential>
+      <printLog message="docker push @{image}" />
+      <exec executable="docker" failonerror="true">
+        <arg value="push" />
+        <arg line="@{image}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerPull">
+    <attribute name="image" />
+    <sequential>
+      <printLog message="docker pull @{image}" />
+      <exec executable="docker" failonerror="true">
+        <arg value="pull" />
+        <arg line="@{image}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="execProc">
+    <attribute name="executable" />
+    <attribute name="failonerror" default="false" />
+    <attribute name="outputproperty" default="output" />
+    <element name="procArgs" optional="yes"/>
+    <sequential>
+
+      <var name="error" unset="true" />
+      <var name="result" unset="true" />
+
+      <exec executable="@{executable}" resultproperty="result" errorproperty="error" failonerror="false">
+        <procArgs />
+      </exec>
+
+      <checkExitCode code="${result}" log="${error}" failonerror="@{failonerror}" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerTop">
+    <attribute name="containerId" />
+    <attribute name="failonerror" default="false" />
+    <sequential>
+      <printLog message="docker top...." />
+      <execProc executable="docker" failonerror="${failonerror}">
+        <procArgs>
+          <arg line="top @{containerId} -eo pid,comm" />
+        </procArgs>
+      </execProc>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerExec">
+    <attribute name="containerId" />
+    <attribute name="command" />
+    <attribute name="failonerror" default="false" />
+    <sequential>
+      <printLog message="docker exec command...." />
+      <execProc executable="docker" failonerror="${failonerror}">
+        <procArgs>
+          <arg line="exec -t @{containerId} @{command}" />
+        </procArgs>
+      </execProc>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerStop">
+    <attribute name="containerId" />
+    <attribute name="failonerror" default="false" />
+    <sequential>
+      <printLog message="docker stop...." />
+      <execProc executable="docker" failonerror="${failonerror}">
+        <procArgs>
+          <arg line="stop --time=1 @{containerId}" />
+        </procArgs>
+      </execProc>
+
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerRm">
+    <attribute name="containerId" />
+    <attribute name="failonerror" default="false" />
+    <sequential>
+      <printLog message="docker rm...." />
+      <execProc executable="docker" failonerror="${failonerror}">
+        <procArgs>
+          <arg line="rm -f @{containerId}" />
+        </procArgs>
+      </execProc>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="dockerRun">
+    <attribute name="image" />
+    <attribute name="options" default="" />
+    <attribute name="workdir" default="${ws.dir}"/>
+    <attribute name="command" default="echo 'hello, world'"/>
+    <sequential>
+      <printLog message="run container..., in ${ws.dir}:@{workdir} ..." />
+
+      <var name="##options##" value="-e ABS_RUN_IN_DOCKER=true @{options}" />
+      <trycatch>
+        <try>
+
+          <if>
+            <not>
+              <equals arg1="@{workdir}" arg2="${ws.dir}" trim="true" />
+            </not>
+            <then>
+              <var name="##options##" value="-v ${ws.dir}:${ws.dir} ${##options##}" />
+            </then>
+          </if>
+
+          <if>
+            <not>
+              <istrue value="${debug}" />
+            </not>
+            <then>
+              <dockerPull image="@{image}" />
+            </then>
+          </if>
+
+          <var name="error" unset="true" />
+          <var name="result" unset="true" />
+          <var name="container.id" unset="true" />
+
+          <exec executable="docker" failonerror="false"
+            outputproperty="container.id" resultproperty="result" errorproperty="error">
+            <arg line="run -t -d -w @{workdir}" />
+            <arg line="-v ${ws.dir}:@{workdir}:rw,z ${##options##} -e WORKSPACE=@{workdir}" />
+            <arg line="@{image} cat" />
+          </exec>
+
+          <printLog message="ContainerId: ${container.id}"  />
+          <checkExitCode code="${result}" log="${error}" />
+
+          <var name="##container.id##" value="${container.id}" />
+          <sleep seconds="5"/>
+
+          <dockerTop containerId="${##container.id##}" />
+          <dockerExec containerId="${##container.id##}" command="@{command}" failonerror="true"/>
+
+        </try>
+        <catch>
+          <printLog message="docker run error!" type="err" />
+        </catch>
+        <finally>
+          <if>
+            <not>
+              <istrue value="${debug}" />
+            </not>
+            <then>
+              <dockerStop containerId="${##container.id##}" />
+              <dockerRm containerId="${##container.id##}" />
+            </then>
+          </if>
+        </finally>
+      </trycatch>
+    </sequential>
+  </macrodef>
+
+</project>

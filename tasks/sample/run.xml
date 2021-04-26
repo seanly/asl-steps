@@ -15,6 +15,9 @@
   <target name="sample" depends="init">
 
     <echo message="${arg1}" />
+    <dockerRun
+      image="registry.cn-hangzhou.aliyuncs.com/k8ops-base/centos:7-v1"
+      command="bash jenkins.sh"/>
 
   </target>
 </project>

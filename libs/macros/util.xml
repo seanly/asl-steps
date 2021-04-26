@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="asl-macros-util">
+  <description>
+    常用功能包装
+  </description>
+
+  <macrodef name="showLogFile">
+    <attribute name="path" />
+    <sequential>
+      <var name="textFile" unset="true" />
+      <loadfile property="textFile" srcfile="@{path}"/>
+      <for param="line" list="${textFile}" delimiter="${line.separator}">
+        <sequential>
+          <echo message="@{line}"/>
+        </sequential>
+      </for>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="checkExitCode">
+    <attribute name="code" default="0"/>
+    <attribute name="log" default="" />
+    <attribute name="failonerror" default="false" />
+    <sequential>
+      <if>
+        <not>
+          <equals arg1="@{code}" arg2="0" trim="true" />
+        </not>
+        <then>
+          <if>
+            <istrue value="@{failonerror}" />
+            <then>
+              <printLog message="@{log}" type="err"/>
+            </then>
+            <else>
+              <printLog message="@{log}" type="warn" />
+            </else>
+          </if>
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+</project>

@@ -16,8 +16,11 @@
     <!-- end: 导入jar包扩展的功能 -->
 
     <!-- start: 导入ant 宏(macros)扩展的功能 -->
+  <import file="${asl.libs.root}/macros/util.xml" />
   <import file="${asl.libs.root}/macros/log.xml" />
   <import file="${asl.libs.root}/macros/git.xml" />
+  <import file="${asl.libs.root}/macros/kubectl.xml" />
+  <import file="${asl.libs.root}/macros/docker.xml" />
   <import file="${asl.libs.root}/macros/ci.xml" />
     <!-- end: 导入ant 宏(macros)扩展的功能 -->
 
