@@ -1,0 +1,38 @@
+<project name="asl-macros-git">
+  <description>
+    原子任务git相关宏(macro)的定义
+  </description>
+
+  <macrodef name="getGitCommitId">
+    <attribute name="repoDir" />
+    <attribute name="commitId" default="git.commit.id"/>
+    <attribute name="shortCommitId" default="git.short.commit.id"/>
+    <sequential>
+      <var name="@{commitId}" unset="true" />
+      <var name="@{shortCommitId}" unset="true" />
+      <exec executable="git" outputproperty="@{commitId}" failonerror="true" dir="@{repoDir}">
+        <arg value="rev-parse" />
+        <arg value="HEAD" />
+      </exec>
+      <exec executable="git" outputproperty="@{shortCommitId}" failonerror="true" dir="@{repoDir}">
+        <arg value="rev-parse" />
+        <arg value="--short" />
+        <arg value="HEAD" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="getGitBranch">
+    <attribute name="repoDir" />
+    <attribute name="branchName" default="git.branch.name"/>
+    <sequential>
+      <var name="@{branchName}" unset="true" />
+      <exec executable="git" outputproperty="@{branchName}" failonerror="true" dir="@{repoDir}">
+        <arg value="rev-parse" />
+        <arg value="--abbrev-ref" />
+        <arg value="HEAD" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+</project>

@@ -7,19 +7,18 @@
   <dirname property="asl.libs.root" file="${ant.file.asl-taskdefs}" />
   <import file="${asl.libs.root}/properties.xml" />
     <!-- start: 导入jar包扩展的功能 -->
-
     <!-- ant-contrib taskdefs.  -->
   <taskdef resource="net/sf/antcontrib/antlib.xml">
     <classpath>
       <fileset dir="${antlibs.root}" includes="**/*.jar" />
     </classpath>
   </taskdef>
-
     <!-- end: 导入jar包扩展的功能 -->
 
     <!-- start: 导入ant 宏(macros)扩展的功能 -->
-  <import file="${asl.libs.root}/macro-log.xml" />
-  <import file="${asl.libs.root}/macro-ci.xml" />
+  <import file="${asl.libs.root}/macros/log.xml" />
+  <import file="${asl.libs.root}/macros/git.xml" />
+  <import file="${asl.libs.root}/macros/ci.xml" />
     <!-- end: 导入ant 宏(macros)扩展的功能 -->
 
 </project>

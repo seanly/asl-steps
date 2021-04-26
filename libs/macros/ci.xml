@@ -1,6 +1,6 @@
-<project name="asl-taskdef">
+<project name="asl-macros-ci">
   <description>
-    原子任务相关宏(macro)的定义
+    原子任务ci相关宏(macro)的定义
   </description>
 
   <macrodef name="ci">
