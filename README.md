@@ -19,10 +19,10 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 
 ./run.sh maven -Droot.pom=pom.xml -Dgoals='clean package' -Doptions='-Dmaven.test.skip=true' -Dsettings.id=ci -Dmaven.repo.local=/home/jenkins/.mvnrepo
 
-./run.sh pkg -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
+./run.sh package -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
 
 ./run.sh archive -Dapp.env=${PIPELINE_ENV} -Dgroup.id=${APP_GROUP} -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Darchive.provider=minio -Dminio.xxxx=xxx
 
-./run.sh ansible-playbook -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C'
+./run.sh ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
 
 ```
