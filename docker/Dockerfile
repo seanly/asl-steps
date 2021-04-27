@@ -9,7 +9,7 @@ RUN set -eux;\
   mkdir -p /docker \
   && tar --extract --file /docker.tgz --strip-components 1 --directory /docker
 
-FROM $CR_URL/k8ops-base/centos:7-v2
+FROM $CR_URL/k8ops-base/java:8-v1
 
 MAINTAINER seanly <seanly@aliyun.com>
 LABEL name="jenkins slave jnlp-dind" \
