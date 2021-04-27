@@ -74,6 +74,7 @@
       <printLog message="docker pull @{image}" />
       <exec executable="docker" failonerror="true">
         <arg value="pull" />
+        <arg value="-q" />
         <arg line="@{image}" />
       </exec>
     </sequential>
