@@ -9,7 +9,7 @@
 ```
 
 命令说明：
-sample是一个task模块，可以实现各种功能的task，比如maven, gradle, pkg, archive, ansible-playbook等
+sample是一个task模块，可以实现各种功能的task，比如maven, gradle, pkg, archive, ansible等
 
 # 使用方式
 
