@@ -1,0 +1,4 @@
+#!/bin/sh
+mkdir -p /var/log/dockerd/logs
+chown -R docker:docker /var/log/dockerd/logs
+exec chpst -u docker:docker svlogd -tt /var/log/dockerd/logs

@@ -1,0 +1,4 @@
+#!/bin/sh -e
+exec 2>&1
+exec chpst -u root:root dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375
+

@@ -1,0 +1,9 @@
+{
+  "max-concurrent-downloads": 3,
+  "max-concurrent-uploads": 3,
+  "registry-mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com"
+  ],
+  "log-driver": "json-file",
+  "bip": "10.44.1.1/16"
+}
