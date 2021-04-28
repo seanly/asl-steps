@@ -45,4 +45,21 @@
     </if>
   </target>
 
+    <!-- pipeline入口 -->
+  <target name="pipeline">
+    <if>
+      <isset property="asl.pipeline.file" />
+      <then>
+        <pipeline file="${asl.pipeline.file}" />
+      </then>
+      <else>
+        <printLog 
+          type="err"
+          message="undefined props(asl.pipeline.file)" 
+          message.zh="未定义属性(asl.pipeline.file)" 
+          />
+      </else>
+    </if>
+  </target>
+
 </project>

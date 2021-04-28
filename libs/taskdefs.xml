@@ -7,10 +7,18 @@
   <dirname property="asl.libs.root" file="${ant.file.asl-taskdefs}" />
   <import file="${asl.libs.root}/properties.xml" />
     <!-- start: 导入jar包扩展的功能 -->
+
     <!-- ant-contrib taskdefs.  -->
   <taskdef resource="net/sf/antcontrib/antlib.xml">
     <classpath>
-      <fileset dir="${antlibs.root}" includes="**/*.jar" />
+      <fileset dir="${antlibs.ant-contrib.root}" includes="**/*.jar" />
+    </classpath>
+  </taskdef>
+
+    <!-- pipeline taskdefs.  -->
+  <taskdef resource="cn/k8ops/ant/antlib.xml">
+    <classpath>
+      <fileset dir="${antlibs.root}/pipeline" includes="**/*.jar" />
     </classpath>
   </taskdef>
     <!-- end: 导入jar包扩展的功能 -->

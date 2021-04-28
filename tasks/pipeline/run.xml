@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="sample" default="sample">
+<project name="pipeline" default="pipeline">
 
-  <dirname property="task.basedir" file="${ant.file.sample}" />
+  <dirname property="task.basedir" file="${ant.file.pipeline}" />
   <basename property="task.name" file="${task.basedir}" />
   <property file="${task.basedir}/default.properties" />
   <property name="task.tool.dir" location="${task.basedir}/tool" />
@@ -12,10 +12,7 @@
     <mkdir dir="${task.reports.dir}" />
   </target>
 
-  <target name="sample" depends="init">
-
-    <echo message="${arg1}" />
-    <echo message="${env.HELLO}" />
-
+  <target name="pipeline" depends="init">
+    <pipeline file="${file}" />
   </target>
 </project>
