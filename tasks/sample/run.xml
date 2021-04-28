@@ -15,6 +15,7 @@
   <target name="sample" depends="init">
 
     <echo message="${arg1}" />
+    <echo message="${env.HELLO}" />
 
     <dockerRun
       image="registry.cn-hangzhou.aliyuncs.com/k8ops-base/centos:7-v1"
