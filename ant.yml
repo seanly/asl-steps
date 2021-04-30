@@ -9,3 +9,4 @@ pipeline:
     HELLO: world
   tasks:
     - task.id: sample
+      arg1: world-${env.HELLO}

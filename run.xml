@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="run" default="main">
+<project name="run">
 
   <!-- cli usage:
     ./tools/ant/bin/ant -f run.xml -p
@@ -22,7 +22,7 @@
   <import file="${asl.libs.root}/taskdefs.xml" />
 
     <!-- 系统入口 -->
-  <target name="main">
+  <target name="task">
 
     <printLog 
       type="debug"
@@ -48,15 +48,15 @@
     <!-- pipeline入口 -->
   <target name="pipeline">
     <if>
-      <isset property="asl.pipeline.file" />
+      <isset property="pipeline.file" />
       <then>
-        <pipeline file="${asl.pipeline.file}" />
+        <pipeline file="${pipeline.file}" />
       </then>
       <else>
         <printLog 
           type="err"
-          message="undefined props(asl.pipeline.file)" 
-          message.zh="未定义属性(asl.pipeline.file)" 
+          message="undefined props(pipeline.file)" 
+          message.zh="未定义属性(pipeline.file)" 
           />
       </else>
     </if>
