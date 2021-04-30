@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="%%TASK_NAME%%" default="%%TASK_NAME%%">
+
+  <dirname property="task.basedir" file="${ant.file.%%TASK_NAME%%}" />
+  <basename property="task.name" file="${task.basedir}" />
+  <property file="${task.basedir}/default.properties" />
+
+  <target name="%%TASK_NAME%%">
+    <printLog message="run task: ${task.name}" type="debug"/>
+  </target>
+
+</project>

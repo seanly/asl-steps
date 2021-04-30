@@ -6,10 +6,20 @@ environment:
 pipeline:
 - name: build
   environment:
-    HELLO: world
+    WORLD: world
   tasks:
     - task.id: sample
-      arg1: world-${env.HELLO}
-  after-tasks:
-    - task.id: sample
-      arg1: world-${env.HELLO}
+      arg1: hello-${env.WORLD}
+    - script:
+        code: ./jenkins.sh
+    - task.id: script
+      code: |
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, world"
+        echo "hello, ${WORLD}"

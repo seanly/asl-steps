@@ -32,3 +32,11 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 ```bash
 ./run.sh pipeline -Dfile=ant.yml -Ddebug=true
 ```
+
+
+#如何创建一个task
+
+```bash
+./run.sh gentask -Dws.dir=tmp -Dout.task.name=hello
+```
+

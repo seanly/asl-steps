@@ -1,0 +1,12 @@
+pipeline:
+- name: build
+  tasks:
+  - task.id: semver
+  - task.id: package
+    artifact.id: %%TASK_NAME%%
+    fileset.includes: >-
+      default.properties,
+      run.xml,
+      VERSION,
+      README.md
+

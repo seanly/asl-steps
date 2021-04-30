@@ -3,7 +3,9 @@
 
   <dirname property="task.basedir" file="${ant.file.pipeline}" />
   <basename property="task.name" file="${task.basedir}" />
+
   <property file="${task.basedir}/default.properties" />
+
   <property name="task.tool.dir" location="${task.basedir}/tool" />
   <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
 

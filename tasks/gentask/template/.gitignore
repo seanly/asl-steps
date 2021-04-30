@@ -1,0 +1,6 @@
+.ci
+.ci.*
+!.ci.yml
+*.tar.gz
+.opspkg
+.asl
