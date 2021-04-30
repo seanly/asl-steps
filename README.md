@@ -26,3 +26,9 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 ./run.sh ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
 
 ```
+
+# 通过yaml描述流水线方式执行
+
+```bash
+./run.sh pipeline -Dfile=ant.yml -Ddebug=true
+```

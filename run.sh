@@ -25,4 +25,4 @@ else
 fi
 
 RUN_BUILDFILE=${ASL_DIR}/run.xml
-exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} -logger org.apache.tools.ant.NoBannerLogger -Dasl.task.id=${TASK} $@
+exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} -logger org.apache.tools.ant.NoBannerLogger -Dtask.id=${TASK} $@
