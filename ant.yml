@@ -8,7 +8,7 @@ pipeline:
   environment:
     WORLD: world
   tasks:
-    - task.id: sample
+    - task.id: asl-tasks/sample
       arg1: hello-${env.WORLD}
     - task.id: script
       code: |

@@ -12,16 +12,10 @@ _ANT_EXEC=${ANT_HOME}/bin/ant
 
 RUN_BUILDFILE=${ASL_DIR}/run.xml
 
-
 task() {
 
-  TASKS_DIRS=${ASL_DIR}/tasks
   if [ -n "$1" ]; then
     TASK=$1
-    if [ ! -d "${TASKS_DIRS}/${TASK}" ]; then
-      echo "--//INFO: please check task.name"
-      exit -1
-    fi
     shift
   else
     echo "--//INFO: please set task.name"
