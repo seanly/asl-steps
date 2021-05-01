@@ -18,10 +18,12 @@
         </then>
       </if>
 
+      <property name="task.run.xml" location="${asl.tasks.root}/@{task}/run.xml" />
+
       <if>
-        <available file="${asl.tasks.root}/@{task}/run.xml" />
+        <available file="${task.run.xml}" />
         <then>
-          <ant antfile="${asl.tasks.root}/@{task}/run.xml" inheritRefs="true" />
+          <ant antfile="${task.run.xml}" inheritRefs="true" />
         </then>
         <else>
           <printLog type="err"
