@@ -1,4 +1,6 @@
 .asl
 .reports
 .ci
+.package
 tmp
+*.tar.gz
