@@ -5,7 +5,7 @@
 # 测试命令
 
 ```bash
-./run.sh sample -Darg1=world
+./run.sh task sample -Darg1=world
 ```
 
 命令说明：
@@ -17,26 +17,26 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 
 ```bash
 
-./run.sh maven -Droot.pom=pom.xml -Dgoals='clean package' -Doptions='-Dmaven.test.skip=true' -Dsettings.id=ci -Dmaven.repo.local=/home/jenkins/.mvnrepo
+./run.sh task maven -Droot.pom=pom.xml -Dgoals='clean package' -Doptions='-Dmaven.test.skip=true' -Dsettings.id=ci -Dmaven.repo.local=/home/jenkins/.mvnrepo
 
-./run.sh package -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
+./run.sh task package -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
 
-./run.sh archive -Dapp.env=${PIPELINE_ENV} -Dgroup.id=${APP_GROUP} -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Darchive.provider=minio -Dminio.xxxx=xxx
+./run.sh task archive -Dapp.env=${PIPELINE_ENV} -Dgroup.id=${APP_GROUP} -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Darchive.provider=minio -Dminio.xxxx=xxx
 
-./run.sh ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
+./run.sh task ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
 
 ```
 
 # 通过yaml描述流水线方式执行
 
 ```bash
-./run.sh pipeline -Dfile=ant.yml -Ddebug=true
+./run.sh pipeline ant.yml -Ddebug=true
 ```
 
 
 #如何创建一个task
 
 ```bash
-./run.sh gentask -Dws.dir=tmp -Dout.task.name=hello
+./run.sh task gentask -Dws.dir=tmp -Dout.task.name=hello
 ```
 
