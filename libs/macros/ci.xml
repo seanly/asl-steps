@@ -17,7 +17,19 @@
             />
         </then>
       </if>
-      <ant antfile="${asl.tasks.root}/@{task}/run.xml" inheritRefs="true" />
+
+      <if>
+        <available file="${asl.tasks.root}/@{task}/run.xml" />
+        <then>
+          <ant antfile="${asl.tasks.root}/@{task}/run.xml" inheritRefs="true" />
+        </then>
+        <else>
+          <printLog type="err"
+            message="task/run.xml is not exists"
+            message.zh="task/run.xml文件不存在" 
+            />
+        </else>
+      </if>
     </sequential>
   </macrodef>
 

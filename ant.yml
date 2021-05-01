@@ -10,16 +10,11 @@ pipeline:
   tasks:
     - task.id: sample
       arg1: hello-${env.WORLD}
-    - script:
-        code: ./jenkins.sh
     - task.id: script
       code: |
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, world"
-        echo "hello, ${WORLD}"
+        echo "echo $WORLD"
+    - task.id: script
+      code: ./jenkins.sh build
+  after-tasks:
+    - script:
+        code: ./jenkins.sh test

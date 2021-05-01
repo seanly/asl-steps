@@ -16,7 +16,6 @@
 
   <target name="script" depends="init">
 
-
     <tstamp>
       <format property="date.uuid" pattern="yyyyMMddhhmmss" locale="en,UK"/>
     </tstamp>
@@ -34,9 +33,7 @@
       <istrue value="${os.unix}" />
       <then>
         <var name="script.filepath" value="${task.tmp.dir}/script-${date.uuid}.sh" />
-        <echo file="${script.filepath}"><![CDATA[
-${code}
-]]>
+        <echo file="${script.filepath}"><![CDATA[${code}]]>
         </echo>
         <chmod file="${script.filepath}" perm="755" />
         <exec executable="bash" dir="${ws.dir}" failonerror="${failonerror}">
@@ -47,9 +44,7 @@ ${code}
         <istrue value="${os.windows}" />
         <then>
           <var name="script.filepath" value="${task.tmp.dir}/code-${date.uuid}.bat" />
-          <echo file="${script.filepath}"><![CDATA[
-${code}
-]]>
+          <echo file="${script.filepath}"><![CDATA[${code}]]>
           </echo>
           <exec executable="cmd.exe" dir="${ws.dir}" failonerror="${failonerror}">
             <arg value="/c" />
