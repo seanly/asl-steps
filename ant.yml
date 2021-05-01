@@ -15,6 +15,6 @@ pipeline:
         echo "echo $WORLD"
     - task.id: script
       code: ./jenkins.sh build
-  after-tasks:
-    - script:
-        code: ./jenkins.sh test
+  when:
+    environment:
+      WORLD: world
