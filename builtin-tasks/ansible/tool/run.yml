@@ -1,0 +1,30 @@
+---
+- name: upgrade app
+  hosts: all
+  gather_facts: true
+  tags:
+    - upgrade
+  vars:
+    pkg_dlpath: /data/pkg_dl
+  pre_tasks:
+    - name: create pkg dl dir
+      file:
+        path: "{{ pkg_dlpath }}"
+        state: directory
+        recurse: yes
+    - name: sync current workspace package 
+      copy:
+        src: "{{ lookup('env', 'WORKSPACE') }}/{{ artifact_id }}-{{ artifact_version }}.tar.gz"
+        dest: "{{ pkg_dlpath }}/{{ artifact_id }}-{{ artifact_version }}.tar.gz"
+        mode: 0750
+  roles:
+    - {role: pkg/upgrade, tags: ['install']}
+
+- name: rollback app
+  hosts: all
+  gather_facts: true
+  tags:
+    - rollback
+  roles:
+    - role: pkg/rollback
+

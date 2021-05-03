@@ -1,0 +1,67 @@
+---
+- name: set variable
+  set_fact:
+    _custom_tasks_dir: "{{ appcfg_dir }}/tasks"
+
+- name: create variables
+  set_fact:
+    _app_install_dir: "{{ app_install_dir }}/{{ app_install_name|default(app_name) }}"
+    _app_rollback_dir: "{{ app_rollback_dir }}/{{ app_install_name|default(app_name) }}"
+
+- name: get current app backup dir
+  stat: 
+    path: "{{ _app_rollback_dir }}-rollback"
+  register: _reg_app_rollback_dir
+
+- name: print rollback fail message
+  fail:
+    msg: "don't rollback, --//ERR: rollback link is not exists."
+  when: not _reg_app_rollback_dir.stat.exists
+
+- name: run pre-deploy task
+  block:
+    - name: check pre task file is exists
+      local_action:
+        module: stat
+        path: "{{ _custom_tasks_dir }}/pre-deploy.yml"
+      run_once: True
+      register: _reg_pre_deploy_taskfile
+    - name: include pre-deploy tasks
+      include_tasks: "{{ _custom_tasks_dir }}/pre-deploy.yml"
+      when: _reg_pre_deploy_taskfile.stat.exists
+
+- name: stop service
+  become: true
+  include: stop_svc.yml
+  when: service_manager is defined
+
+- name: rollback to prevision version
+  become: true
+  become_user: "{{ run_as_user }}"
+  synchronize:
+    src: "{{ _reg_app_rollback_dir.stat.path}}/"
+    dest: "{{ _app_install_dir }}"
+    recursive: yes
+    delete: yes
+    checksum: yes
+    rsync_opts: "[{{ rsync_opts }}]"
+  delegate_to: "{{ inventory_hostname }}"
+  when: _reg_app_rollback_dir.stat.exists
+
+- name: run post-deploy task
+  block:
+    - name: check post task file is exists
+      local_action:
+        module: stat
+        path: "{{ _custom_tasks_dir }}/post-deploy.yml"
+      run_once: True
+      register: _reg_post_deploy_taskfile
+    - name: include post-deploy tasks
+      include_tasks: "{{ _custom_tasks_dir }}/post-deploy.yml"
+      when: _reg_post_deploy_taskfile.stat.exists
+
+- name: start service
+  become: true
+  include: start_svc.yml
+  when: service_manager is defined
+

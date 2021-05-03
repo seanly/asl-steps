@@ -155,24 +155,13 @@
   <macrodef name="dockerRun">
     <attribute name="image" />
     <attribute name="options" default="" />
-    <attribute name="workdir" default="${ws.dir}"/>
     <attribute name="command" default="echo 'hello, world'"/>
     <sequential>
-      <printLog message="run container..., in ${ws.dir}:@{workdir} ..." />
+      <printLog message="run container..., in ${ws.dir} ..." />
 
-      <var name="##options##" value="-e ABS_RUN_IN_DOCKER=true @{options}" />
+      <var name="##options##" value="@{options}" />
       <trycatch>
         <try>
-
-          <if>
-            <not>
-              <equals arg1="@{workdir}" arg2="${ws.dir}" trim="true" />
-            </not>
-            <then>
-              <var name="##options##" value="-v ${ws.dir}:${ws.dir} ${##options##}" />
-            </then>
-          </if>
-
           <if>
             <not>
               <istrue value="${debug}" />
@@ -188,8 +177,8 @@
 
           <exec executable="docker" failonerror="false"
             outputproperty="container.id" resultproperty="result" errorproperty="error">
-            <arg line="run -t -d -w @{workdir}" />
-            <arg line="-v ${ws.dir}:@{workdir}:rw,z ${##options##} -e WORKSPACE=@{workdir}" />
+            <arg line="run -t -d -w ${ws.dir}" />
+            <arg line="-v ${ws.dir}:${ws.dir}:rw,z ${##options##} -e WORKSPACE=${ws.dir}" />
             <arg line="@{image} cat" />
           </exec>
 

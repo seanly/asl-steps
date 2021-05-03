@@ -1,0 +1,22 @@
+---
+- name: upgrade app
+  hosts: all
+  gather_facts: true
+  tags:
+    - upgrade
+  vars:
+    osspkg_endpoint: "{{ lookup('env', 'ALIYUN_OSS_ENDPOINT') }}"
+    osspkg_access_key: "{{ lookup('env', 'ALIYUN_OSS_USR') }}"
+    osspkg_secret_key: "{{ lookup('env', 'ALIYUN_OSS_PSW') }}"
+    osspkg_bucket: "{{ lookup('env', 'ALIYUN_OSS_BUCKET') }}"
+    artifact_lane: "{{ lookup('env', 'ARTIFACT_LANE') }}"
+    group_id: "{{ lookup('env', 'GROUP_ID') }}"
+    artifact_id: "{{ lookup('env', 'ARTIFACT_ID') }}"
+    artifact_version: "{{ lookup('env', 'ARTIFACT_VERSION') }}"
+
+  roles:
+    #- {role: supervisor-config, tags: ['init']}
+    - {role: ossutil, tags: ['pkg']}
+    - {role: osspkg, tags: ['pkg']}
+    - {role: pkg/upgrade, tags: ['install']}
+

@@ -1,0 +1,27 @@
+# parameters:
+  # service_name: service name
+  # service_manager: service/supervisor/systemd
+  #
+- name: start service by service command
+  tags:
+    - service
+  service:
+    name: "{{ service_name }}"
+    state: started
+  when: service_manager is defined and service_manager == 'service'
+
+- name: start service by supervisorctl command
+  tags:
+    - service
+  supervisorctl:
+    name: "{{ service_name }}"
+    state: started
+  when: service_manager is defined and service_manager == 'supervisor'
+
+- name: start service by systemctl command
+  tags:
+    - service
+  systemd:
+    name: "{{ service_name}}"
+    state: started
+  when: service_manager is defined and service_manager == 'systemd'

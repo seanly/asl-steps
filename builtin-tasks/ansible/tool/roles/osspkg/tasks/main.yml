@@ -1,0 +1,65 @@
+# parameters:
+  # artifact_id
+  # artifact_version
+
+- name: check artifact variables
+  fail:
+    msg: please define artifact variables
+  when: 
+    - osspkg_artifact_id is not defined
+    - osspkg_artifact_version is not defined 
+
+- name: define inner vars
+  set_fact:
+    _group_id_path: "{{ osspkg_group_id |replace('.', '/') }}"
+    _pkg_dirname: "{{ osspkg_artifact_id }}-{{ osspkg_artifact_version }}"
+
+- name: define artifact version url variable
+  set_fact:
+    _pkg_artifact_version_url: "{{ osspkg_bucket }}/{{ osspkg_artifact_lane }}/{{ _group_id_path }}/{{ osspkg_artifact_id }}/{{ osspkg_artifact_version }}"
+    _pkg_name: "{{ _pkg_dirname }}.tar.gz"
+
+- name: create pkg download directory
+  file:
+    path: "{{ osspkg_pkg_dlpath }}"
+    state: directory
+    recurse: yes
+
+- name: get pkg's md5 value
+  block:
+    - name: get md5 file
+      ossutil_cp:
+        access_key: "{{ osspkg_access_key }}"
+        secret_key: "{{ osspkg_secret_key }}"
+        object: "oss://{{ _pkg_artifact_version_url }}/{{_pkg_name}}.md5"
+        endpoint: "{{ osspkg_endpoint }}"
+        dest: "{{osspkg_pkg_dlpath}}/{{ _pkg_name }}.md5"
+        options: "-f"
+    - name: get md5 value
+      shell: cat "{{ _pkg_name }}.md5"
+      args:
+        chdir: "{{ osspkg_pkg_dlpath }}"
+        executable: /bin/bash
+      register: _reg_pkg_md5
+
+- name: get pkg file
+  block:
+    - name: get pkg file
+      ossutil_cp:
+        access_key: "{{ osspkg_access_key }}"
+        secret_key: "{{ osspkg_secret_key }}"
+        object: "oss://{{ _pkg_artifact_version_url }}/{{_pkg_name}}"
+        endpoint: "{{ osspkg_endpoint }}"
+        dest: "{{osspkg_pkg_dlpath}}/{{ _pkg_name }}"
+        options: "-f"
+    - name: verify package file
+      shell: "md5sum {{ _pkg_name }} |awk '{print $1}'"
+      args:
+        chdir: "{{ osspkg_pkg_dlpath }}"
+        executable: /bin/bash
+      register: _reg_pkg_md5sum
+
+- name: verify pkg
+  fail:
+    msg: "pkg md5 error"
+  when: _reg_pkg_md5.stdout != _reg_pkg_md5sum.stdout

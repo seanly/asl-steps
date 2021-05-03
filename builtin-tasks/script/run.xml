@@ -36,9 +36,31 @@
         <echo file="${script.filepath}"><![CDATA[${code}]]>
         </echo>
         <chmod file="${script.filepath}" perm="755" />
-        <exec executable="bash" dir="${ws.dir}" failonerror="${failonerror}">
-          <arg file="${script.filepath}" />
-        </exec>
+
+
+        <if>
+          <isset property="docker.run.image" />
+          <then>
+
+          <!-- save env output -->
+          <exec executable="env" output="${task.tmp.dir}/env.list">
+          </exec>
+
+          <var name="##docker.run.options##" value="${docker.run.options} --env-file ${task.tmp.dir}/env.list" />
+          <dockerRun
+            image="${docker.run.image}"
+            options="${##docker.run.options##}"
+            command="bash ${script.filepath}"
+            />
+
+          </then>
+          <else>
+            <exec executable="bash" dir="${ws.dir}" failonerror="${failonerror}">
+              <arg file="${script.filepath}" />
+            </exec>
+          </else>
+        </if>
+
       </then>
       <elseif>
         <istrue value="${os.windows}" />

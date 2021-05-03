@@ -1,0 +1,22 @@
+---
+# tasks file for ossutil
+- name: check os environment
+  fail:
+    msg: don't suppport "{{ ansible_distribution }}" os
+  when: ansible_distribution != 'CentOS'
+
+- name: check installed
+  stat:
+    path: "{{ ossutil_install_path }}"
+  register: _reg_ossutil_install_path
+
+- name: install ossutil64 tool
+  copy:
+    src: "ossutil64"
+    dest: "{{ ossutil_install_path }}"
+    mode: 0755
+  when: ansible_machine == 'x86_64' and not _reg_ossutil_install_path.stat.exists 
+
+
+
+  

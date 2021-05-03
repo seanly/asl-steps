@@ -1,0 +1,184 @@
+---
+- name: create variables
+  set_fact:
+    _pkg_path: "{{ pkg_dlpath }}/{{ pkg_artifact_id }}-{{ pkg_artifact_version }}.tar.gz"
+    _pkg_install_dir: "{{ pkg_install_dir }}/{{ pkg_artifact_id }}-{{ pkg_artifact_version }}"
+    _app_install_dir: "{{ app_install_dir }}/{{ app_install_name|default(app_name) }}"
+    _app_rollback_dir: "{{ app_rollback_dir }}/{{ app_install_name|default(app_name) }}"
+    _config_files_dir: "{{ appcfg_dir }}/files/"
+    _custom_tasks_dir: "{{ appcfg_dir }}/tasks"
+
+- name: install new pkg to pkg install dir
+  block:
+    - name: create pkg install dir
+      file:
+        path: "{{ item }}"
+        state: directory
+        recurse: yes
+        owner: "{{ run_as_user }}"
+        group: "{{ run_as_user }}"
+      with_items:
+        - "{{ _pkg_install_dir }}"
+    - name: unzip new version to pkg install dir
+      unarchive:
+        src: "{{ _pkg_path }}"
+        dest: "{{ _pkg_install_dir }}"
+        remote_src: yes
+        owner: "{{ run_as_user }}"
+        group: "{{ run_as_user }}"
+    
+- name: sync config files to remote host pkg install dir
+  block:
+    - name: check config files dir 
+      become: false
+      local_action:
+        module: stat
+        path: "{{ _config_files_dir }}"
+      run_once: True
+      register: _return_config_files_dir
+    - name: sync config files to remote host
+      copy:
+        src: "{{ _config_files_dir }}"
+        dest: "{{ _pkg_install_dir }}"
+        mode: 0777
+        owner: "{{ run_as_user }}"
+        group: "{{ run_as_user }}"
+      when: _return_config_files_dir.stat.exists
+
+- name: run pre-deploy task
+  block:
+    - name: check pre task file is exists
+      become: false
+      local_action:
+        module: stat
+        path: "{{ _custom_tasks_dir }}/pre-deploy.yml"
+      run_once: True
+      register: _reg_pre_deploy_taskfile
+    - name: include pre-deploy tasks
+      include_tasks: "{{ _custom_tasks_dir }}/pre-deploy.yml"
+      when: _reg_pre_deploy_taskfile.stat.exists
+
+- name: check current version status 
+  synchronize:
+    src: "{{ _pkg_install_dir }}/"
+    dest: "{{ _app_install_dir }}"
+    archive: no
+    recursive: yes
+    delete: yes
+    checksum: yes
+    rsync_opts: "[{{ rsync_opts }} '--dry-run']"
+  delegate_to: "{{ inventory_hostname }}"
+  register: _is_latest_version
+
+- name: create rollback dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: "{{ run_as_user }}"
+    group: "{{ run_as_user }}"
+  with_items:
+    - "{{ _app_rollback_dir }}"
+  when: _app_install_dir != _app_rollback_dir
+
+- name: get current app install path
+  stat:
+    path: "{{ _app_install_dir }}"
+  register: _reg_app_install_dir
+
+- name: backup current app to rollback dir
+  synchronize:
+    src: "{{ _app_install_dir }}/"
+    dest: "{{ _app_rollback_dir }}-rollback"
+    recursive: yes
+    delete: yes
+    checksum: yes
+    rsync_opts: "[{{ rsync_opts }}]"
+    owner: true
+    group: true
+  delegate_to: "{{ inventory_hostname }}"
+  when: _is_latest_version.changed and _reg_app_install_dir.stat.exists
+
+- name: stop service
+  become: true
+  include: stop_svc.yml
+  when:
+    - service_manager is defined
+    - service_state is undefined 
+
+- name: backup softlink
+  block:
+    - name: backup app install softlink
+      file:
+        src: "{{ _reg_app_install_dir.stat.lnk_target }}"
+        dest: "{{ _app_rollback_dir }}-old-lnk"
+        state: link
+        owner: "{{ run_as_user }}"
+        group: "{{ run_as_user }}"
+      when: _reg_app_install_dir.stat.islnk
+    - name: clean app install softlnk
+      file:
+        path: "{{ _reg_app_install_dir.stat.path }}"
+        state: absent
+      when: _reg_app_install_dir.stat.islnk 
+  when: _reg_app_install_dir.stat.exists
+
+- name: create install dir
+  file:
+    path: "{{ _app_install_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ run_as_user }}"
+    group: "{{ run_as_user }}"
+  when: _reg_app_install_dir.stat.exists == false
+
+- name: update version to install path
+  become: true
+  become_user: "{{ run_as_user }}"
+  synchronize:
+    src: "{{ _pkg_install_dir }}/"
+    dest: "{{ _app_install_dir }}"
+    recursive: yes
+    delete: yes
+    checksum: yes
+    rsync_opts: "[{{ rsync_opts }}]"
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: run post-deploy task
+  block:
+    - name: check post task file is exists
+      become: false
+      local_action:
+        module: stat
+        path: "{{ _custom_tasks_dir }}/post-deploy.yml"
+      run_once: True
+      register: _reg_post_deploy_taskfile
+    - name: include post-deploy tasks
+      include_tasks: "{{ _custom_tasks_dir }}/post-deploy.yml"
+      when: _reg_post_deploy_taskfile.stat.exists
+
+- name: start service
+  become: true
+  include: start_svc.yml
+  when: 
+    - service_manager is defined 
+    - service_state is undefined 
+
+- name: reload service
+  become: true
+  include: reload_svc.yml
+  when: 
+    - service_manager is defined
+    - service_state is defined
+    - service_state == "reloaded"
+
+- name: clean package install data
+  tags:
+    - clean
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ _pkg_install_dir }}"
+    - "{{ _pkg_path }}"
+

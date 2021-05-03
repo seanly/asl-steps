@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ansible" default="ansible">
+
+  <dirname property="task.basedir" file="${ant.file.ansible}" />
+  <basename property="task.name" file="${task.basedir}" />
+  <property file="${task.basedir}/default.properties" />
+  <property name="task.tool.dir" location="${task.basedir}/tool" />
+
+  <property name="task.reports.dir" location="${reports}/${task.name}" />
+  <property name="task.tmp.dir" location="${dot.ci.dir}/${task.name}" />
+
+  <target name="init">
+    <mkdir dir="${task.reports.dir}" />
+    <mkdir dir="${task.tmp.dir}" />
+  </target>
+
+  <target name="ansible" depends="init">
+
+    <!-- check argument -->
+    <if>
+      <equals arg1="${inventory}" arg2="" trim="true" />
+      <then>
+        <printLog message="inventory is not empty." type="err" />
+      </then>
+    </if>
+
+    <var name="##playbook##" value="${playbook}" />
+    <if>
+      <available file="${task.tool.dir}/${playbook}" />
+      <then>
+        <var name="##playbook##" value="${task.tool.dir}/${playbook}" />
+      </then>
+      <elseif>
+        <available file="${playbook}" />
+      </elseif>
+      <then>
+        <var name="##playbook##" value="${playbook}" />
+      </then>
+      <else>
+        <printLog message="playbook is not exists." type="err"/>
+      </else>
+    </if>
+
+    <var name="##run.sh##" value="${task.tmp.dir}/run.sh" />
+
+    <property name="options" value="-v -C" />
+
+    <!-- check ansible-playbook command -->
+    <var name="##command##" value="ansible-playbook" />
+    <available file="ansible-playbook" filepath="${env.PATH}" property="ansible-playbook.present"/>
+
+    <if>
+      <istrue value="${ansible-playbook.present}" />
+      <then>
+        <var name="##ansible.command##" value="ansible-playbook" />
+      </then>
+      <else>
+        <chmod file="${ansible.command}" perm="755" />
+      </else>
+    </if>
+
+    <var name="##inventory##" value="${inventory}" />
+    <var name="##options##" value="${options}" />
+
+    <if>
+      <isset property="group.id" />
+      <then>
+        <var name="##options##" value="${##options##} -e group_id=${group.id}"/>
+      </then>
+    </if>
+
+    <if>
+      <isset property="artifact.id" />
+      <then>
+        <var name="##options##" value="${##options##} -e artifact_id=${artifact.id}"/>
+      </then>
+    </if>
+    <if>
+      <isset property="artifact.version" />
+      <then>
+        <var name="##options##" value="${##options##} -e artifact_version=${artifact.version}"/>
+      </then>
+    </if>
+
+    <var name="##options##" value="${##options##}"/>
+    <if>
+      <equals arg1="${user}" arg2="jenkins" trim="true" />
+      <then>
+        <var name="##options##" value="${##options##} --become"/>
+      </then>
+    </if>
+
+    <var name="##docker.run.options##" value="" />
+
+    <if>
+      <available file="${keyfile}" type="file" />
+      <then>
+        <var name="##options##" value="${##options##} --user=${user} --key-file=${keyfile}"/>
+        <var name="##docker.run.options##" value="${##docker.run.options##} -v ${keyfile}:${keyfile}" />
+      </then>
+    </if>
+
+    <if>
+      <istrue value="${debug}" />
+      <then>
+        <printLog message="${##command##} ${playbook} -i=${##inventory##} ${##options##}" />
+      </then>
+    </if>
+    <echo file="${##run.sh##}"><![CDATA[#!/bin/sh
+${##command##} ${playbook} --inventory=${##inventory##} ${##options##} 
+]]>
+    </echo>
+    <chmod file="${##run.sh##}" perm="755" />
+
+    <if>
+      <isset property="docker.run.image" />
+      <then>
+
+        <!-- save env output -->
+        <exec executable="env" output="${task.tmp.dir}/env.list">
+        </exec>
+
+        <var name="##docker.run.options##" value="${##docker.run.options##} --env-file ${task.tmp.dir}/env.list" />
+        <dockerRun
+          image="${docker.run.image}"
+          options="${##docker.run.options##}"
+          command="${##run.sh##}"
+          />
+      </then>
+      <else>
+        <exec executable="bash" dir="${ws.dir}" failonerror="true">
+          <arg file="${##run.sh##}" />
+        </exec>
+      </else>
+    </if>
+  </target>
+</project>

@@ -1,0 +1,13 @@
+---
+- name: upgrade app
+  hosts: all
+  gather_facts: true
+  tags:
+    - upgrade
+  vars:
+    appcfg_dir: "{{ playbook_dir }}/../vars/{{group_id}}/{{ app_name }}"
+  roles:
+    - {role: ossutil, tags: ['pkg']}
+    - {role: osspkg, tags: ['pkg']}
+    - {role: pkg/upgrade, tags: ['install']}
+

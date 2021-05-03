@@ -1,0 +1,11 @@
+---
+# defaults file for pkg/upgrade
+# group_id=
+# app_name=
+
+run_as_user: www
+appcfg_dir: "{{ playbook_dir }}/vars/{{group_id}}/{{ app_name }}"
+rsync_opts: "'--exclude=.git', '--exclude=.svn', '--exclude=/tmp', '--exclude=/log', '--exclude=.gitignore', "
+
+app_install_dir: "{{ install_dir|default('/data/app') }}"
+app_rollback_dir: "{{ rollback_dir|default(app_install_dir) }}"

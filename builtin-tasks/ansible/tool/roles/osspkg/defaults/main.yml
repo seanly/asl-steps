@@ -1,0 +1,14 @@
+---
+# defaults file for osspkg
+
+osspkg_pkg_dlpath: "{{ pkg_dlpath|default('/data/pkg_dl') }}"
+osspkg_endpoint: "{{ alioss_endpoint|default('oss-cn-hangzhou.aliyuncs.com') }}"
+osspkg_bucket: "{{ alioss_bucket|default('osspkg-jenkinspkg') }}"
+osspkg_artifact_lane: "{{ artifact_lane|default('tag') }}"
+osspkg_group_id: "{{ group_id }}"
+osspkg_artifact_id: "{{ artifact_id }}"
+osspkg_artifact_version: "{{ artifact_version }}"
+
+osspkg_access_key: "{{ alioss_access_key|default('osspkg') }}"
+osspkg_secret_key: "{{ alioss_secret_key|default('osspkg123') }}"
+

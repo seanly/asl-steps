@@ -1,0 +1,6 @@
+---
+# vars file for ossutil
+
+ossutil_install_path: /usr/bin/ossutil
+
+

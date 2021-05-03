@@ -1,0 +1,27 @@
+---
+- name: upgrade app
+  hosts: all
+  gather_facts: true
+  tags:
+    - upgrade
+  vars:
+    appcfg_dir: "{{ playbook_dir }}/../vars/{{team_id}}/{{ app_name }}"
+  vars_files:
+    - "{{ appcfg_dir }}/vars/main.yml"
+  roles:
+    - {role: ossutil, tags: ['pkg']}
+    - {role: osspkg, tags: ['pkg']}
+    - {role: pkg/upgrade, tags: ['install']}
+
+- name: rollback app
+  hosts: all
+  gather_facts: true
+  tags:
+    - rollback
+  vars:
+    appcfg_dir: "{{ playbook_dir }}/../vars/{{team_id}}/{{ app_name }}"
+  vars_files:
+    - "{{ appcfg_dir }}/vars/main.yml"
+  roles:
+    - role: pkg/rollback
+

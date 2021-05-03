@@ -1,0 +1,21 @@
+---
+# defaults file for pkg/upgrade
+
+# group_id=
+# app_name=
+# app_install_name: 
+
+run_as_user: www
+pkg_artifact_id: "{{ artifact_id }}"
+pkg_artifact_version: "{{ artifact_version }}"
+
+appcfg_dir: ".vars"
+
+pkg_dlpath: /data/pkg_dl
+pkg_install_dir: "{{ install_dir|default('/data/pkg_install') }}"
+# 应用安装路径，最终的安装路径会是${app_install_dir}/${app_name}
+app_install_dir: "{{ install_dir|default('/data/app') }}"
+app_rollback_dir: "{{ rollback_dir|default(app_install_dir) }}"
+
+rsync_opts: "'--exclude=.git', '--exclude=.svn', '--exclude=/tmp', '--exclude=/log', '--exclude=.gitignore', "
+

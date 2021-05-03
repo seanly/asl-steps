@@ -1,0 +1,6 @@
+---
+# vars file for osspkg
+
+ossutil_install_path: /usr/bin/ossutil
+
+
