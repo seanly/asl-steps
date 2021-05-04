@@ -42,5 +42,5 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 
 # 目录说明
 
-builtin-tasks 内建task
-tasks         临时存放外部task，通过多层目录结构
+1. builtin-tasks 内建task
+2. tasks         临时存放外部task，通过多层目录结构
