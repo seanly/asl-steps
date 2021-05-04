@@ -15,10 +15,10 @@
     </classpath>
   </taskdef>
 
-    <!-- pipeline taskdefs.  -->
+    <!-- asl-extra taskdefs.  -->
   <taskdef resource="cn/k8ops/ant/antlib.xml">
     <classpath>
-      <fileset dir="${antlibs.root}/pipeline" includes="**/*.jar" />
+      <fileset dir="${antlibs.root}/asl-extra" includes="**/*.jar" />
     </classpath>
   </taskdef>
     <!-- end: 导入jar包扩展的功能 -->
