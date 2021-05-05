@@ -14,6 +14,7 @@ function test() {
 
 function package() {
   echo "--// package ...."
+  git archive --format tar.gz --output "./ant-asl.tar.gz" master
 }
 
 if [ "$#" == 0 ]; then
