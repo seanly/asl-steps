@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="archive" default="archive">
+
+  <dirname property="task.basedir" file="${ant.file.archive}" />
+  <basename property="task.name" file="${task.basedir}" />
+  <property file="${task.basedir}/default.properties" />
+  <property name="task.tool.dir" location="${task.basedir}/tool" />
+
+  <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
+  <property name="task.tmp.dir" location="${dot.ci.dir}/${task.name}" />
+  <property name="archive.dir" location=".archive" />
+
+  <import file="${task.basedir}/macro/artifact.xml" optional="true" />
+
+  <target name="init">
+    <delete dir="${task.reports.dir}" />
+    <mkdir dir="${task.reports.dir}" />
+    <mkdir dir="${task.tmp.dir}" />
+
+    <delete dir="${archive.dir}" />
+    <mkdir dir="${archive.dir}" />
+  </target>
+
+  <target name="archive" depends="init">
+
+
+      <!-- group.id -->
+      <if>
+        <equals arg1="${group.id}" arg2="" trim="true" />
+        <then>
+          <printLog messasge="production info(group.id) is not configure" type="err"/>
+        </then>
+        <else>
+          <propertyregex property="group.id.dir" input="${group.id}" regexp="\." replace="/" global="true" defaultValue="${group.id}" />
+          <var name="##group.id.dir##" value="${group.id.dir}" />
+        </else>
+      </if>
+
+      <!-- artifact.id -->
+      <if>
+        <equals arg1="${artifact.id}" arg2="" trim="true" />
+        <then>
+          <fail message="--// production info(artifact.id) is not configure" />
+        </then>
+      </if>
+      <if>
+          <equals arg1="${artifact.version}" arg2="" trim="true" />
+          <then>
+            <fail message="--// production info(artifact.version) is not configure" />
+          </then>
+        </if>
+
+      <property name="outputDir" location="${task.reports.dir}" />
+      <var name="reportOutputFile" value="${outputDir}/archive-report.xml" />
+
+      <!-- copy archive resource -->
+      <copy todir="${archive.dir}" verbose="true">
+        <fileset dir="${fileset.dir}" includes="${fileset.includes}" excludes="${fileset.excludes}" />
+      </copy>
+
+      <checksum forceoverwrite="true" fileext=".md5">
+        <fileset dir="${archive.dir}">
+          <include name="**/*" />
+        </fileset>
+      </checksum>
+
+      <var name="##remote.dir##" value="${lane}/${##group.id.dir##}/${artifact.id}/${artifact.version}" />
+      <printLog message="artifact path: ${##remote.dir##}" />
+
+      <if>
+        <equals arg1="${provider}" arg2="minio" trim="true" />
+        <then>
+          <minio-archive 
+            endpoint="${minio.endpoint}" 
+            accessKey="${minio.access.key}"
+            secretKey="${minio.secret.key}" 
+            bucket="${minio.bucket}"
+            remotePath="${##remote.dir##}"
+            xmlReport="${reportOutputFile}" >
+            <fileset dir="${archive.dir}" casesensitive="yes">
+              <include name="**/*" />
+            </fileset>
+          </minio-archive>
+        </then>
+        <elseif>
+          <equals arg1="${provider}" arg2="minio" trim="true" />
+          <then>
+            <alioss-archive 
+              endpoint="${alioss.endpoint}"
+              accessKey="${alioss.access.key}"
+              secretKey="${alioss.secret.key}"
+              bucket="${alioss.bucket}"
+              remotePath="${##remote.dir##}"
+              xmlReport="${reportOutputFile}"
+              >
+              <fileset dir="${archive.dir}" casesensitive="yes">
+                <include name="**/*" />
+              </fileset>
+            </alioss-archive>
+          </then>
+        </elseif>
+        <else>
+          <printLog message="provider($provider) is not suppport" type="err"/>
+        </else>
+      </if>
+  </target>
+</project>

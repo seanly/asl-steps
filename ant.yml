@@ -9,9 +9,6 @@ pipeline:
   environment:
     WORLD: world
   tasks:
-    - task.id: script
-      code: ansible -h
-      docker.run.image: registry.cn-hangzhou.aliyuncs.com/k8ops-build/ansible:v2.10
     - task.id: asl-tasks/sample
       arg1: hello-${env.WORLD}
     - task.id: script
@@ -22,6 +19,7 @@ pipeline:
     - package:
         artifact.version: ${env.APP_VERSION}
         fileset.includes: 'tasks/**'
+
   when:
     environment:
       WORLD: world
