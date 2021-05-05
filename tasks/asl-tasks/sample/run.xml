@@ -17,5 +17,12 @@
     <echo message="${arg1}" />
     <echo message="${env.HELLO}" />
 
+    <if>
+      <available file="${dapper.file}" />
+      <then>
+        <dapper file="${dapper.file}" />
+      </then>
+    </if>
+
   </target>
 </project>
