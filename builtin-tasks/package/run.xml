@@ -15,7 +15,6 @@
   </target>
 
   <target name="package" depends="init">
-    <echo message="---${ws.dir}" />
 
     <!-- check params -->
     <if>

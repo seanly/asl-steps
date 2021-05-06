@@ -7,12 +7,18 @@
   <macrodef name="checkWsDir">
     <sequential>
       <if>
-        <not>
+        <and>
           <isset property="ws.dir" />
-        </not>
+          <not>
+            <equals arg1="${ws.dir}" arg2="" trim="true" />
+          </not>
+          <available file="${ws.dir}" type="dir" />
+        </and>
         <then>
-          <printLog message="property ws.dir is not set" type="err" />
         </then>
+        <else>
+          <printLog message="property ws.dir is not set" type="err" />
+        </else>
       </if>
     </sequential>
   </macrodef>
