@@ -19,6 +19,9 @@ pipeline:
     - package:
         artifact.version: ${env.APP_VERSION}
         fileset.includes: 'tasks/**'
+  after-tasks:
+    - task.id: script
+      code: ./jenkins.sh build
 
   when:
     environment:
