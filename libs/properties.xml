@@ -27,7 +27,6 @@
       <!-- jenkins相关变量 -->
     <property name="jenkins.home" location="${env.JENKINS_HOME}" />
     <property name="jenkins.workspace" location="${env.WORKSPACE}" />
-    <property name="ws.dir" location="${basedir}" />
 
     <target name="asl.properties.unix" if="os.unix">
         <!-- unix properties -->

@@ -17,8 +17,6 @@
     <echo message="${arg1}" />
     <echo message="${env.HELLO}" />
 
-    <printLog message="${arg1}" type="err" />
-
     <if>
       <available file="${dapper.file}" />
       <then>

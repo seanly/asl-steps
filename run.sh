@@ -38,6 +38,7 @@ pipeline() {
     echo "--//INFO: please set pipeline.file"
     exit -1
   fi
+
   exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} pipeline \
     -logger org.apache.tools.ant.NoBannerLogger \
     -Dpipeline.file=$PIPELINE_FILE $@

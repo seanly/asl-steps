@@ -3,6 +3,19 @@
   <description>
     常用功能包装
   </description>
+  
+  <macrodef name="checkWsDir">
+    <sequential>
+      <if>
+        <not>
+          <isset property="ws.dir" />
+        </not>
+        <then>
+          <printLog message="property ws.dir is not set" type="err" />
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
 
   <macrodef name="showLogFile">
     <attribute name="path" />

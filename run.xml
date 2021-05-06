@@ -24,6 +24,8 @@
     <!-- 系统入口 -->
   <target name="task">
 
+    <checkWsDir />
+
     <printLog 
       type="debug"
       message="basedir: ${ws.dir}"
@@ -47,6 +49,7 @@
 
     <!-- pipeline入口 -->
   <target name="pipeline">
+
     <if>
       <isset property="pipeline.file" />
       <then>
