@@ -16,9 +16,9 @@
   </taskdef>
 
     <!-- asl-extra taskdefs.  -->
-  <taskdef resource="cn/k8ops/ant/antlib.xml">
+  <taskdef resource="cn/k8ops/ant/asl/antlib.xml">
     <classpath>
-      <fileset dir="${antlibs.root}/asl-extra" includes="**/*.jar" />
+      <fileset dir="${ant.root}/lib" includes="**/*.jar" />
     </classpath>
   </taskdef>
     <!-- end: 导入jar包扩展的功能 -->

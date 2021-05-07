@@ -23,7 +23,8 @@ step() {
   fi
 
   exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} step \
-    -logger org.apache.tools.ant.NoBannerLogger -Dstep.id=${TASK} $@
+    -logger cn.k8ops.ant.asl.AslLogger \
+    -Dstep.id=${TASK} $@
 }
 
 pipeline() {
@@ -40,7 +41,7 @@ pipeline() {
   fi
 
   exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} pipeline \
-    -logger org.apache.tools.ant.NoBannerLogger \
+    -logger cn.k8ops.ant.asl.AslLogger \
     -Dpipeline.file=$PIPELINE_FILE $@
 }
 

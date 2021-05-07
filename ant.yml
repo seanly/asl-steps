@@ -8,19 +8,19 @@ pipeline:
 - name: build
   environment:
     WORLD: world
-  tasks:
-    - task.id: asl-tasks/sample
+  steps:
+    - step.id: sample
       arg1: hello-${env.WORLD}
-    - task.id: script
+    - step.id: script
       code: |
         echo "echo $WORLD"
-    - task.id: script
+    - step.id: script
       code: ./jenkins.sh build
     - package:
         artifact.version: ${env.APP_VERSION}
         fileset.includes: 'tasks/**'
-  after-tasks:
-    - task.id: script
+  after-steps:
+    - step.id: script
       code: ./jenkins.sh build
 
   when:
