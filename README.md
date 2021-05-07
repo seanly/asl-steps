@@ -5,11 +5,11 @@
 # 测试命令
 
 ```bash
-./run.sh task sample -Darg1=world
+./run.sh step sample -Darg1=world
 ```
 
 命令说明：
-sample是一个task模块，可以实现各种功能的task，比如maven, gradle, pkg, archive, ansible等
+sample是一个step模块，可以实现各种功能的step，比如maven, gradle, pkg, archive, ansible等
 
 # 使用方式
 
@@ -17,13 +17,13 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 
 ```bash
 
-./run.sh task maven -Droot.pom=pom.xml -Dgoals='clean package' -Doptions='-Dmaven.test.skip=true' -Dsettings.id=ci -Dmaven.repo.local=/home/jenkins/.mvnrepo
+./run.sh step maven -Droot.pom=pom.xml -Dgoals='clean package' -Doptions='-Dmaven.test.skip=true' -Dsettings.id=ci -Dmaven.repo.local=/home/jenkins/.mvnrepo
 
-./run.sh task package -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
+./run.sh step package -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Dfileset.dir=${WORKSPACE}/dist -Dfileset.include='**/*'
 
-./run.sh task archive -Dapp.env=${PIPELINE_ENV} -Dgroup.id=${APP_GROUP} -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Darchive.provider=minio -Dminio.xxxx=xxx
+./run.sh step archive -Dapp.env=${PIPELINE_ENV} -Dgroup.id=${APP_GROUP} -Dapp.id=hello -Dapp.version=${PIPELINE_VERSION} -Darchive.provider=minio -Dminio.xxxx=xxx
 
-./run.sh task ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
+./run.sh step ansible -Dansible.user=${ANSIBLE_SSH_USER} -Dansible.keyfile=${ANSIBLE_SSH_KEYFILE} -Dinventory.hosts='ip,' -Dansible.options='-v -C' -Dplaybook.file=deploy.yml
 
 ```
 
@@ -34,10 +34,10 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 ```
 
 
-#如何创建一个task
+#如何创建一个step
 
 ```bash
-./run.sh task gentask -Dws.dir=tmp -Dout.task.name=hello
+./run.sh step genstep -Dws.dir=tmp -Dout.step.name=hello
 ```
 
 # ant文档

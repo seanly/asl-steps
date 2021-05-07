@@ -22,7 +22,7 @@
   <import file="${asl.libs.root}/taskdefs.xml" />
 
     <!-- 系统入口 -->
-  <target name="task">
+  <target name="step">
 
     <checkWsDir />
 

@@ -12,18 +12,18 @@ _ANT_EXEC=${ANT_HOME}/bin/ant
 
 RUN_BUILDFILE=${ASL_DIR}/run.xml
 
-task() {
+step() {
 
   if [ -n "$1" ]; then
     TASK=$1
     shift
   else
-    echo "--//INFO: please set task.name"
+    echo "--//INFO: please set step.name"
     exit -1
   fi
 
-  exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} task \
-    -logger org.apache.tools.ant.NoBannerLogger -Dtask.id=${TASK} $@
+  exec ${_ANT_EXEC} -f ${RUN_BUILDFILE} step \
+    -logger org.apache.tools.ant.NoBannerLogger -Dstep.id=${TASK} $@
 }
 
 pipeline() {
