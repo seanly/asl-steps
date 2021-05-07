@@ -1,10 +1,6 @@
 #!/bin/bash
 
 #set -eux
-set -eu
-
-WORKSPACE=$(pwd)
-echo "--//INFO: ws.dir: ${WORKSPACE}"
 
 ASL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ANT_HOME=${ASL_DIR}/tools/ant
@@ -50,7 +46,7 @@ fname=`declare -f -F $1`
 if [ -n "$fname" ]; then
   $@
 else 
-  echo 1
+  echo "--//ERR: func $1 is not exists."
 fi
 
 status=$?
