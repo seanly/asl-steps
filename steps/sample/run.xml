@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="sample" default="sample">
 
-  <dirname property="task.basedir" file="${ant.file.sample}" />
-  <basename property="task.name" file="${task.basedir}" />
-  <property file="${task.basedir}/default.properties" />
-  <property name="task.tool.dir" location="${task.basedir}/tool" />
+  <dirname property="step.basedir" file="${ant.file.sample}" />
+  <basename property="step.name" file="${step.basedir}" />
+  <property file="${step.basedir}/default.properties" />
+  <property name="step.tool.dir" location="${step.basedir}/tool" />
 
-  <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
+  <property name="step.reports.dir" location="${dot.reports.dir}/${step.name}" />
 
   <target name="init">
-    <mkdir dir="${task.reports.dir}" />
+    <mkdir dir="${step.reports.dir}" />
   </target>
 
   <target name="sample" depends="init">

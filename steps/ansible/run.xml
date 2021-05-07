@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ansible" default="ansible">
 
-  <dirname property="task.basedir" file="${ant.file.ansible}" />
-  <basename property="task.name" file="${task.basedir}" />
-  <property file="${task.basedir}/default.properties" />
-  <property name="task.tool.dir" location="${task.basedir}/tool" />
+  <dirname property="step.basedir" file="${ant.file.ansible}" />
+  <basename property="step.name" file="${step.basedir}" />
+  <property file="${step.basedir}/default.properties" />
+  <property name="step.tool.dir" location="${step.basedir}/tool" />
 
-  <property name="task.reports.dir" location="${reports}/${task.name}" />
-  <property name="task.tmp.dir" location="${dot.ci.dir}/${task.name}" />
+  <property name="step.reports.dir" location="${reports}/${step.name}" />
+  <property name="step.tmp.dir" location="${dot.ci.dir}/${step.name}" />
 
   <target name="init">
-    <mkdir dir="${task.reports.dir}" />
-    <mkdir dir="${task.tmp.dir}" />
+    <mkdir dir="${step.reports.dir}" />
+    <mkdir dir="${step.tmp.dir}" />
   </target>
 
   <target name="ansible" depends="init">
@@ -26,9 +26,9 @@
 
     <var name="##playbook##" value="${playbook}" />
     <if>
-      <available file="${task.tool.dir}/${playbook}" />
+      <available file="${step.tool.dir}/${playbook}" />
       <then>
-        <var name="##playbook##" value="${task.tool.dir}/${playbook}" />
+        <var name="##playbook##" value="${step.tool.dir}/${playbook}" />
       </then>
       <elseif>
         <available file="${playbook}" />
@@ -41,7 +41,7 @@
       </else>
     </if>
 
-    <var name="##run.sh##" value="${task.tmp.dir}/run.sh" />
+    <var name="##run.sh##" value="${step.tmp.dir}/run.sh" />
 
     <property name="options" value="-v -C" />
 
@@ -117,10 +117,10 @@ ${##command##} ${playbook} --inventory=${##inventory##} ${##options##}
       <then>
 
         <!-- save env output -->
-        <exec executable="env" output="${task.tmp.dir}/env.list">
+        <exec executable="env" output="${step.tmp.dir}/env.list">
         </exec>
 
-        <var name="##docker.run.options##" value="${##docker.run.options##} --env-file ${task.tmp.dir}/env.list" />
+        <var name="##docker.run.options##" value="${##docker.run.options##} --env-file ${step.tmp.dir}/env.list" />
         <dockerRun
           image="${docker.run.image}"
           options="${##docker.run.options##}"

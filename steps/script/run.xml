@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="script" default="script">
 
-  <dirname property="task.basedir" file="${ant.file.script}" />
-  <basename property="task.name" file="${task.basedir}" />
-  <property file="${task.basedir}/default.properties" />
-  <property name="task.tool.dir" location="${task.basedir}/tool" />
+  <dirname property="step.basedir" file="${ant.file.script}" />
+  <basename property="step.name" file="${step.basedir}" />
+  <property file="${step.basedir}/default.properties" />
+  <property name="step.tool.dir" location="${step.basedir}/tool" />
 
-  <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
-  <property name="task.tmp.dir" location="${dot.ci.dir}/${task.name}" />
+  <property name="step.reports.dir" location="${dot.reports.dir}/${step.name}" />
+  <property name="step.tmp.dir" location="${dot.ci.dir}/${step.name}" />
 
   <target name="init">
-    <mkdir dir="${task.reports.dir}" />
-    <mkdir dir="${task.tmp.dir}" />
+    <mkdir dir="${step.reports.dir}" />
+    <mkdir dir="${step.tmp.dir}" />
   </target>
 
   <target name="script" depends="init">
@@ -32,7 +32,7 @@
     <if>
       <istrue value="${os.unix}" />
       <then>
-        <var name="script.filepath" value="${task.tmp.dir}/script-${date.uuid}.sh" />
+        <var name="script.filepath" value="${step.tmp.dir}/script-${date.uuid}.sh" />
         <echo file="${script.filepath}"><![CDATA[${code}]]>
         </echo>
         <chmod file="${script.filepath}" perm="755" />
@@ -43,10 +43,10 @@
           <then>
 
           <!-- save env output -->
-          <exec executable="env" output="${task.tmp.dir}/env.list">
+          <exec executable="env" output="${step.tmp.dir}/env.list">
           </exec>
 
-          <var name="##docker.run.options##" value="${docker.run.options} --env-file ${task.tmp.dir}/env.list" />
+          <var name="##docker.run.options##" value="${docker.run.options} --env-file ${step.tmp.dir}/env.list" />
           <dockerRun
             image="${docker.run.image}"
             options="${##docker.run.options##}"
@@ -65,7 +65,7 @@
       <elseif>
         <istrue value="${os.windows}" />
         <then>
-          <var name="script.filepath" value="${task.tmp.dir}/code-${date.uuid}.bat" />
+          <var name="script.filepath" value="${step.tmp.dir}/code-${date.uuid}.bat" />
           <echo file="${script.filepath}"><![CDATA[${code}]]>
           </echo>
           <exec executable="cmd.exe" dir="${ws.dir}" failonerror="${failonerror}">

@@ -33,15 +33,15 @@
       />
 
     <if>
-      <isset property="task.id" />
+      <isset property="step.id" />
       <then>
-        <ci task="${task.id}" />
+        <ci step="${step.id}" />
       </then>
       <else>
         <printLog 
           type="err"
-          message="undefined props(task.id)" 
-          message.zh="未定义属性(task.id)" 
+          message="undefined props(step.id)" 
+          message.zh="未定义属性(step.id)" 
           />
       </else>
     </if>

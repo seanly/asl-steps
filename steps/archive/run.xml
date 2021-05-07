@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="archive" default="archive">
 
-  <dirname property="task.basedir" file="${ant.file.archive}" />
-  <basename property="task.name" file="${task.basedir}" />
-  <property file="${task.basedir}/default.properties" />
-  <property name="task.tool.dir" location="${task.basedir}/tool" />
+  <dirname property="step.basedir" file="${ant.file.archive}" />
+  <basename property="step.name" file="${step.basedir}" />
+  <property file="${step.basedir}/default.properties" />
+  <property name="step.tool.dir" location="${step.basedir}/tool" />
 
-  <property name="task.reports.dir" location="${dot.reports.dir}/${task.name}" />
-  <property name="task.tmp.dir" location="${dot.ci.dir}/${task.name}" />
+  <property name="step.reports.dir" location="${dot.reports.dir}/${step.name}" />
+  <property name="step.tmp.dir" location="${dot.ci.dir}/${step.name}" />
   <property name="archive.dir" location=".archive" />
 
-  <import file="${task.basedir}/macro/artifact.xml" optional="true" />
+  <import file="${step.basedir}/macro/artifact.xml" optional="true" />
 
   <target name="init">
-    <delete dir="${task.reports.dir}" />
-    <mkdir dir="${task.reports.dir}" />
-    <mkdir dir="${task.tmp.dir}" />
+    <delete dir="${step.reports.dir}" />
+    <mkdir dir="${step.reports.dir}" />
+    <mkdir dir="${step.tmp.dir}" />
 
     <delete dir="${archive.dir}" />
     <mkdir dir="${archive.dir}" />
@@ -50,7 +50,7 @@
           </then>
         </if>
 
-      <property name="outputDir" location="${task.reports.dir}" />
+      <property name="outputDir" location="${step.reports.dir}" />
       <var name="reportOutputFile" value="${outputDir}/archive-report.xml" />
 
       <!-- copy archive resource -->

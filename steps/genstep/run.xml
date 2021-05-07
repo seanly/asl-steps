@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="genstep" default="genstep">
+
+  <!-- step properties -->
+  <dirname property="step.basedir" file="${ant.file.genstep}" />
+  <basename property="step.name" file="${step.basedir}" />
+
+  <property file="${step.basedir}/default.properties" />
+
+  <property  name="template.dir" location="${step.basedir}/template" />
+
+  <target name="genstep">
+    <mkdir dir="${ws.dir}/${out.step.name}" />
+    <copy todir="${ws.dir}/${out.step.name}">
+      <fileset dir="${template.dir}"/>
+      <filterchain>
+        <replacetokens begintoken="%%" endtoken="%%">
+          <token key="TASK_NAME" value="${out.step.name}"/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+  </target>
+
+</project>

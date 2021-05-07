@@ -4,31 +4,31 @@
   </description>
 
   <macrodef name="ci">
-    <attribute name="task" />
+    <attribute name="step" />
     <sequential>
       <if>
         <not>
-          <isset property="asl.tasks.root" />
+          <isset property="asl.steps.root" />
         </not>
         <then>
           <printLog type="err"
-            message="asl.tasks.root is not set"
-            message.zh="asl.tasks.root没有设置" 
+            message="asl.steps.root is not set"
+            message.zh="asl.steps.root没有设置" 
             />
         </then>
       </if>
 
-      <property name="task.run.xml" location="${asl.tasks.root}/@{task}/run.xml" />
+      <property name="step.run.xml" location="${asl.steps.root}/@{step}/run.xml" />
 
       <if>
-        <available file="${task.run.xml}" />
+        <available file="${step.run.xml}" />
         <then>
-          <ant antfile="${task.run.xml}" inheritRefs="true" />
+          <ant antfile="${step.run.xml}" inheritRefs="true" />
         </then>
         <else>
           <printLog type="err"
-            message="task/run.xml is not exists"
-            message.zh="task/run.xml文件不存在" 
+            message="step/run.xml is not exists"
+            message.zh="step/run.xml文件不存在" 
             />
         </else>
       </if>
