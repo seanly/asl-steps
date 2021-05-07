@@ -40,10 +40,5 @@ sample是一个task模块，可以实现各种功能的task，比如maven, gradl
 ./run.sh task gentask -Dws.dir=tmp -Dout.task.name=hello
 ```
 
-# 目录说明
-
-1. builtin-tasks 内建task
-2. tasks         临时存放外部task，通过多层目录结构
-
 # ant文档
 http://ant.apache.org/manual/index.html

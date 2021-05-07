@@ -18,20 +18,13 @@
         </then>
       </if>
 
-      <property name="builtin.task.run.xml" location="${asl.builtin.tasks.root}/@{task}/run.xml" />
       <property name="task.run.xml" location="${asl.tasks.root}/@{task}/run.xml" />
 
       <if>
-        <available file="${builtin.task.run.xml}" />
+        <available file="${task.run.xml}" />
         <then>
-          <ant antfile="${builtin.task.run.xml}" inheritRefs="true" />
+          <ant antfile="${task.run.xml}" inheritRefs="true" />
         </then>
-        <elseif>
-          <available file="${task.run.xml}" />
-          <then>
-            <ant antfile="${task.run.xml}" inheritRefs="true" />
-          </then>
-        </elseif>
         <else>
           <printLog type="err"
             message="task/run.xml is not exists"
@@ -39,6 +32,7 @@
             />
         </else>
       </if>
+
     </sequential>
   </macrodef>
 
