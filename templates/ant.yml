@@ -1,0 +1,28 @@
+
+environment:
+  APP_NAME: sample
+  APP_VERSION: "1.0"
+
+# pipeline模板
+pipeline:
+- name: build
+  environment:
+    WORLD: world
+  steps:
+    - step.id: sample
+      arg1: hello-${env.WORLD}
+    - step.id: script
+      code: |
+        echo "echo $WORLD"
+    - step.id: script
+      code: ./jenkins.sh build
+    - package:
+        artifact.version: ${env.APP_VERSION}
+        fileset.includes: 'tasks/**'
+  after-steps:
+    - step.id: script
+      code: ./jenkins.sh build
+
+  when:
+    environment:
+      WORLD: world
