@@ -1,0 +1,8 @@
+.asl
+.reports
+.ci
+.package
+.archive
+tmp
+*.tar.gz
+.git
