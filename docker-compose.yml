@@ -1,0 +1,7 @@
+version: '3'
+services:
+  asl-steps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: registry.cn-hangzhou.aliyuncs.com/k8ops/asl-steps:v0.1

@@ -1,3 +1,3 @@
 FROM busybox
 
-COPY ./ /opt/ant-asl
+COPY ./ /opt/asl-steps
